@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "99239769164",
+    "project_id": "speakingcashflow",
+    "storage_bucket": "speakingcashflow.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:99239769164:android:02ae0ea204728e5aa5f0e9",
+        "android_client_info": {
+          "package_name": "com.hhoangphuoc.speakingcashflow"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCovF0GxHPr--Xb785K_YLE0vsaC5uG9_k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

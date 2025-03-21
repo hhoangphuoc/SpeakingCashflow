@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -37,11 +38,11 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -56,7 +57,16 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.animation.graphics.android)
     implementation(libs.firebase.common.ktx)
-//    ksp("androidx.room:room-compiler:2.6.1")
+
+    // Firebase
+    implementation(libs.firebase.firestore.ktx)
+    implementation(libs.firebase.auth.ktx)
+    implementation(platform(libs.firebase.bom))
+    
+    // Gemini AI
+    // implementation("com.google.ai.client.generativeai:generativeai:0.2.2")
+    // Add the dependency for the Vertex AI in Firebase library
+    implementation(libs.firebase.vertexai)
 
     //TESTING AND DEBUGGING
     testImplementation(libs.junit)

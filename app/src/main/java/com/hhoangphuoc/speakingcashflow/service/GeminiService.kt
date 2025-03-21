@@ -4,28 +4,33 @@ import com.hhoangphuoc.speakingcashflow.data.Transaction
 import com.hhoangphuoc.speakingcashflow.data.Category
 import com.hhoangphuoc.speakingcashflow.data.TransactionType
 
-//import com.google.ai.client.generativeai.GenerativeModel
-import com.google.firebase.Timestamp //firebase timestamp
+// firebase and vertex ai
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
+import com.google.firebase.vertexai.vertexAI
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.tasks.await
 
 import java.util.Date
 import javax.inject.Singleton
 import javax.inject.Inject
 
-import org.json.JSONObject //to convert response to JSON object
+import org.json.JSONObject
+
 /**
- * A Singleton of a Gemini Service, when it connected with Gemini API
+ * A Singleton of a Gemini Service with Firebase Vertex AI
  * This contains the logic for processing voice input and generating transactions
- * Gemini will handle the text input and convert it to a transaction object
+ * Firebase Vertex AI will handle the text input and convert it to a transaction object
  */
 @Singleton
 class GeminiService @Inject constructor() {
-    private val model = GenerativeModel(
-        modelName = "gemini-pro",
-        apiKey = BuildConfig.GEMINI_API_KEY
-    )
-
+    private val generativeModel = Firebase.vertexAI.generativeModel("gemini-1.5-flash")
+    
+    private val db = Firebase.firestore
+    
     suspend fun processVoiceInput(input: String): Result<Transaction> = withContext(Dispatchers.IO) {
         try {
             val categoryList = Category.DEFAULT_CATEGORIES.joinToString("\n") {
@@ -42,15 +47,17 @@ class GeminiService @Inject constructor() {
                 - note: string (optional)
                 
                 Available categories:
-                ${categoryList}
+                $categoryList
                 
                 The currency is EUR (€).
                 
                 Voice input: "$input"
             """.trimIndent()
 
-            val response = model.generateContent(prompt).text
-            val json = JSONObject(response)
+            val response = generativeModel.generateContent(prompt)
+            val responseText = response.text ?: throw IllegalStateException("Empty response from Gemini")
+
+            val json = JSONObject(responseText)
 
             val transaction = Transaction(
                 amount = json.getDouble("amount"),
@@ -61,6 +68,25 @@ class GeminiService @Inject constructor() {
             )
 
             Result.success(transaction)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+    
+    suspend fun saveTransaction(transaction: Transaction): Result<String> = withContext(Dispatchers.IO) {
+        try {
+            val docRef = db.collection("transactions").document()
+            val transactionMap = mapOf(
+                "id" to docRef.id,
+                "amount" to transaction.amount,
+                "type" to transaction.type.name,
+                "categoryId" to transaction.categoryId,
+                "date" to transaction.date,
+                "note" to transaction.note
+            )
+            
+            docRef.set(transactionMap).await()
+            Result.success(docRef.id)
         } catch (e: Exception) {
             Result.failure(e)
         }
