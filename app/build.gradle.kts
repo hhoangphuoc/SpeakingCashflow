@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.material.icons.extended)
 
     //dagger hilt
     implementation(libs.hilt.android)
@@ -76,4 +77,8 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //COMPOSE CALENDAR
+    implementation("io.github.boguszpawlowski.composecalendar:composecalendar:1.4.0")
+    implementation("io.github.boguszpawlowski.composecalendar:kotlinx-datetime:1.4.0")
 }
