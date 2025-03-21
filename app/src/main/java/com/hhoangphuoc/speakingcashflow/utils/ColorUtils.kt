@@ -80,17 +80,17 @@ fun getCategoryPastelColor(categoryName: String): Color {
     return if (isDarkMode) getPastelColorForDarkMode(baseColor) else baseColor
 }
 
-@Composable
-fun getCategoryPastelColor(colorHex: String): Color {
-    val isDarkMode = LocalIsDarkMode.current
-    val color = colorHex.toColor()
-
-    return if (isDarkMode) {
-        color.toPastelColor(true)
-    } else {
-        color.toPastelColor(false)
-    }
-}
+//@Composable
+//private fun getCategoryPastelColor(colorHex: String): Color {
+//    val isDarkMode = LocalIsDarkMode.current
+//    val color = colorHex.toColor()
+//
+//    return if (isDarkMode) {
+//        color.toPastelColor(true)
+//    } else {
+//        color.toPastelColor(false)
+//    }
+//}
 
 private fun getCategoryColorByString(text: String): Color {
     // Generate a hash code from the string and use it to select a pastel color

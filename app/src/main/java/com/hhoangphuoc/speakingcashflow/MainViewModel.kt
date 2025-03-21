@@ -121,7 +121,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun deleteTransaction(transaction: Transaction) {
+    fun deleteTransaction(transaction: Transaction) {
         //TODO: Implement delete transaction
 //        viewModelScope.launch {
 //            transactionRepository.deleteTransaction(transaction.id)
